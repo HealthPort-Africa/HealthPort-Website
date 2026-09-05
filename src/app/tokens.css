@@ -1,0 +1,168 @@
+/* ============================================================
+   HealthPort Design Tokens — tokens.css
+   Source of truth: HealthPort Brand Guidelines (Brandbook 01)
+   Stack: Next.js + Tailwind CSS v4 (CSS-first @theme config)
+   Import in globals.css:  @import "tailwindcss";  @import "./tokens.css";
+   ============================================================ */
+
+@theme {
+  /* ----------------------------------------------------------
+     COLOR — exact values sampled from the brand guide.
+     Usage proportions (per guide): Violet 60% · Teal + Sky 30% ·
+     Coral + accents 10%. Parchment is the page; Ink is the text.
+     ---------------------------------------------------------- */
+
+  /* Primary */
+  --color-violet:        #801078;  /* anchor color — headings, primary UI, chapter slides */
+  --color-teal:          #155362;  /* oceanic teal — secondary structure, links, keylines */
+  --color-coral:         #EF6461;  /* vibrant coral — sparing emphasis only (10% tier) */
+  --color-sky:           #5DB7DE;  /* sky surge — data, OxyIntel accents */
+
+  /* Secondary */
+  --color-sunny:         #EFF37B;  /* highlights on teal only */
+  --color-teagreen:      #CCEEAA;  /* soft positive panels */
+  --color-parchment:     #F2EFEA;  /* SURFACE color — cards, panels, quiet chapters */
+  --color-ink:           #001316;  /* body text, dark slides */
+  --color-white:         #FFFFFF;  /* page base */
+
+  /* Tints & shades (from the guide's tint/shade ramps) */
+  --color-violet-tint:   #F7C1F3;
+  --color-violet-deep:   #4D0A48;
+  --color-teal-tint:     #B1E2EE;
+  --color-teal-mid:      #48AFB7;
+  --color-teal-deep:     #082127;
+  --color-coral-tint:    #FDEFEF;
+  --color-sky-tint:      #EFF8FC;
+  --color-sky-deep:      #152E39;
+
+  /* Semantic aliases — components reference these, never raw hues */
+  --color-bg:            var(--color-white);          /* page base (verified against brand guide layouts) */
+  --color-surface:       var(--color-parchment);      /* cards, panels, quiet chapters */
+  --color-surface-dark:  var(--color-ink);            /* dark chapter surfaces (At a Glance, The System) */
+  --color-fg:            var(--color-ink);
+  --color-heading:       var(--color-ink);        /* headings read in Ink; Violet is reserved for accents */
+  --color-heading-accent: var(--color-violet);    /* opt-in for stats, one chapter slide per page, editorial emphasis */
+  --color-accent:        var(--color-teal);
+  --color-cta:           var(--color-violet);
+  --color-cta-fg:        var(--color-parchment);
+  --color-thread:        var(--color-teal);      /* the oxygen thread */
+  --color-keyline:       color-mix(in srgb, var(--color-teal) 18%, transparent);
+  --color-muted:         color-mix(in srgb, var(--color-ink) 62%, var(--color-parchment));
+
+  /* ----------------------------------------------------------
+     TYPE FAMILIES — mandated by the brand guide.
+     Manrope: headlines & emphasis. Inter: body & long-form.
+     Load via next/font/google, expose as CSS vars below.
+     ---------------------------------------------------------- */
+  --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-body:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* ----------------------------------------------------------
+     TYPE SCALE — fluid, Fruitful-calibrated (one idea per screen,
+     display type doing the talking). clamp(min @375px → max @1280px).
+     Guide rules baked in: display leading = 100% of size; sentence
+     case; no end punctuation on headings.
+     ---------------------------------------------------------- */
+
+  /* h1 / hero display — one sentence per screen */
+  --text-h1:            clamp(2.75rem, 1.06rem + 7.2vw, 6rem);      /* 44 → 96 */
+  --text-h1--line-height: 0.98;
+  --text-h1--letter-spacing: -0.035em;
+  --text-h1--font-weight: 700;
+
+  /* h2 / chapter headline */
+  --text-h2:            clamp(2.125rem, 1.1rem + 4.4vw, 4rem);      /* 34 → 64 */
+  --text-h2--line-height: 1.0;
+  --text-h2--letter-spacing: -0.03em;
+  --text-h2--font-weight: 700;
+
+  /* h3 / section headline */
+  --text-h3:            clamp(1.625rem, 1.2rem + 1.8vw, 2.5rem);    /* 26 → 40 */
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h3--font-weight: 600;
+
+  /* h4 / sub-section */
+  --text-h4:            clamp(1.3125rem, 1.15rem + 0.7vw, 1.75rem); /* 21 → 28 */
+  --text-h4--line-height: 1.25;
+  --text-h4--font-weight: 600;
+
+  /* h5 / card & row titles */
+  --text-h5:            clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);    /* 17 → 20 */
+  --text-h5--line-height: 1.35;
+  --text-h5--font-weight: 600;
+
+  /* p1 / lead paragraph — hero subs, chapter intros */
+  --text-p1:            clamp(1.125rem, 1.05rem + 0.5vw, 1.375rem); /* 18 → 22 */
+  --text-p1--line-height: 1.55;
+
+  /* p2 / body — the default reading size */
+  --text-p2:            clamp(1rem, 0.96rem + 0.25vw, 1.125rem);    /* 16 → 18 */
+  --text-p2--line-height: 1.6;
+
+  /* p3 / small — captions, meta, legal */
+  --text-p3:            0.875rem;                                   /* 14 */
+  --text-p3--line-height: 1.5;
+
+  /* eyebrow / label — Manrope SemiBold, uppercase, tracked */
+  --text-eyebrow:       0.8125rem;                                  /* 13 */
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.09em;
+  --text-eyebrow--font-weight: 600;
+
+  /* stat — impact numbers, tabular */
+  --text-stat:          clamp(2.75rem, 1.5rem + 5.2vw, 5.5rem);     /* 44 → 88 */
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.02em;
+  --text-stat--font-weight: 700;
+
+  /* ----------------------------------------------------------
+     SPACING & LAYOUT
+     ---------------------------------------------------------- */
+  --spacing-section:     clamp(5rem, 3rem + 8vw, 12rem);   /* chapter breathing room */
+  --spacing-section-sm:  clamp(3rem, 2rem + 4vw, 6rem);    /* denser page sections */
+  --container-max:       75rem;    /* 1200px content width */
+  --container-prose:     45rem;    /* 720px, ~65ch at p2 */
+
+  /* Radius — the guide's containers are organic and rounded;
+     sharp corners are explicitly discouraged */
+  --radius-control:      0.5rem;   /* buttons, inputs */
+  --radius-card:         1.25rem;  /* panels, comparison blocks */
+  --radius-media:        1.75rem;  /* image/video containers */
+  --radius-organic:      42% 58% 55% 45% / 48% 42% 58% 52%; /* brand blob container */
+
+  /* Motion — GSAP timing references */
+  --ease-out-brand:      cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal:     250ms;
+  --duration-stagger:    60ms;
+}
+
+/* ============================================================
+   PAIRING RULES (from the guide's accessibility matrix)
+
+   USE:   Violet on Parchment · Teal on Parchment · Sunny on Teal ·
+          Tea Green text panels with Ink · Sky Surge with Ink ·
+          Coral on Parchment · Parchment type on Violet ·
+          Sky Surge on Violet
+   NEVER: Coral with Violet · Teal with Violet · Violet with Ink ·
+          Ink with Teal · Sky Surge with Tea Green · Coral with Sunny
+
+   Contrast notes for the web: Coral (#EF6461) and Sky (#5DB7DE) on
+   Parchment fail AA for body-size text — use them at h3 size and up,
+   or on Ink/teal-deep panels. Body text is always Ink on Parchment
+   or Parchment on Violet/Ink slides.
+   ============================================================ */
+
+/* ============================================================
+   next/font setup (app/layout.tsx) — the guide's weights only:
+
+   import { Manrope, Inter } from "next/font/google";
+   const manrope = Manrope({ subsets:["latin"], weight:["400","600","700"], variable:"--font-manrope", display:"swap" });
+   const inter   = Inter({ subsets:["latin"], weight:["400","600"], variable:"--font-inter", display:"swap" });
+   <html className={`${manrope.variable} ${inter.variable}`}>
+
+   Element mapping:
+   h1,h2,h3,h4,h5, .eyebrow, .stat, buttons  → font-display (Manrope)
+   p, li, forms, everything else             → font-body (Inter)
+   Headings: sentence case, no end punctuation (brand rule).
+   ============================================================ */
