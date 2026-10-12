@@ -9,26 +9,13 @@
  * four stats stagger in via [[StatReveal]] and each number counts up once
  * on scroll-in via [[CountUp]]. Both are within the six allowed motions.
  *
- * Values are treated as targets pending client confirmation — flip to
- * source-cited figures when the client signs off.
+ * Values come from the client-supplied metrics JSON.
  */
 import Image from "next/image";
 import { CountUp } from "@/components/motion/CountUp";
+import { metricsOrdered } from "@/lib/metrics";
 
-type Stat = {
-  value: number;
-  suffix?: string;
-  decimals?: number;
-  label: string;
-};
-
-// FACT NEEDED: numbers are current client targets pending source-cited confirmation.
-const stats: Stat[] = [
-  { value: 10, suffix: "+", label: "Hospitals served" },
-  { value: 2.4, suffix: "M+", decimals: 1, label: "Litres of medical oxygen delivered" },
-  { value: 30000, suffix: "+", label: "Patients supported" },
-  { value: 99, suffix: "%", label: "Supply reliability" },
-];
+const stats = metricsOrdered;
 
 export function ImpactChapter() {
   return (
@@ -98,13 +85,13 @@ export function ImpactChapter() {
             via CountUp on scroll-into-view. */}
         <div
           data-stat-group
-          className="mt-16 md:mt-24 grid grid-cols-2 gap-x-8 gap-y-10 md:flex md:flex-row md:flex-wrap md:justify-between md:gap-x-6"
+          className="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10 lg:gap-x-14 gap-y-10"
         >
           {stats.map((stat) => (
             <div
               key={stat.label}
               data-stat-reveal
-              className="flex flex-col gap-3"
+              className="flex min-w-0 flex-col gap-3"
             >
               <CountUp
                 value={stat.value}
@@ -112,8 +99,9 @@ export function ImpactChapter() {
                 decimals={stat.decimals}
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "var(--text-h2)",
-                  lineHeight: 1.05,
+                  fontSize: "clamp(2.25rem, 2.8vw, 3.25rem)",
+                  whiteSpace: "nowrap",
+                  lineHeight: 1.04,
                   letterSpacing: "-0.02em",
                   fontWeight: 700,
                   fontVariantNumeric: "tabular-nums",

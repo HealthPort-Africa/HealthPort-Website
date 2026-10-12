@@ -1,162 +1,133 @@
-/**
- * OxygenGap — the "problem" chapter, restrained.
- * Second Draft: prose left, Tea Green fact panel right. Both sides bleed —
- * a photo of an oxygen cylinder valve anchored to the LEFT of the viewport
- * clipped by the section bottom; the fact panel extends past the RIGHT edge
- * of the container so it feels tucked to the viewport wall.
- *
- * Motion: right-column fact items fade-up-and-settle with an 80 ms stagger
- * via [[StatReveal]] client leaf. Section itself fades in via SectionReveal.
- *
- * Facts marked `FACT NEEDED` until a citable source is provided.
- */
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import oxygenValve from "../../../public/images/oxygen-valve.png";
 
-type Fact = {
-  headline: string;
-  body: React.ReactNode;
-};
-
-const facts: Fact[] = [
+const points = [
   {
-    headline: "1 in 5",
-    body: (
-      <>
-        Hospital departments{" "}
-        <strong className="font-semibold">can&rsquo;t see</strong> how much
-        oxygen they have left until it runs out.
-      </>
-    ),
+    title: "Limited visibility",
+    body: "Care teams need to know how much oxygen is available where care actually happens.",
   },
   {
-    headline: "Hours",
-    body: (
-      <>
-        wait time between running low and getting a refill during{" "}
-        <strong className="font-semibold">peak demand.</strong>
-      </>
-    ),
+    title: "Delayed refills",
+    body: "An empty cylinder means waiting for a refill to reach the ward that needs it.",
   },
   {
-    headline: "Everyday",
-    body: (
-      <>
-        a hospital somewhere in the region{" "}
-        <strong className="font-semibold">rations care</strong> because oxygen
-        is unavailable.
-      </>
-    ),
+    title: "The last mile",
+    body: "Supply upstream only helps when coordination and delivery carry it all the way to the bedside.",
   },
 ];
 
 export function OxygenGap() {
+  const composition = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = composition.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animations: Animation[] = [];
+    const tankMotion = el.querySelector<HTMLElement>("[data-gap-depth]");
+    const textMotion = Array.from(el.querySelectorAll<HTMLElement>("[data-gap-drift]"));
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    let frame = 0;
+    const updateDepth = () => {
+      frame = 0;
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+      // Scaling from the bottom keeps the cylinder shoulder on the section boundary.
+      if (tankMotion) tankMotion.style.transform = desktop.matches ? `scale(${1 + progress * 0.045})` : "";
+      textMotion.forEach((point, index) => {
+        point.style.transform = desktop.matches ? `translateY(${(0.5 - progress) * (index ? 24 : 16)}px)` : "";
+      });
+    };
+    const scheduleDepth = () => { if (!frame) frame = requestAnimationFrame(updateDepth); };
+    window.addEventListener("scroll", scheduleDepth, { passive: true });
+    window.addEventListener("resize", scheduleDepth);
+    scheduleDepth();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      const tank = el.querySelector<HTMLElement>("[data-gap-tank]");
+      if (tank) animations.push(tank.animate(
+        [{ opacity: 0, transform: "translateY(56px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 1000, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" }
+      ));
+      el.querySelectorAll<HTMLElement>("[data-gap-copy]").forEach((point, index) => {
+        animations.push(point.animate(
+          [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: 650, delay: 280 + index * 100, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" }
+        ));
+      });
+      observer.disconnect();
+    }, { threshold: 0.15 });
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      animations.forEach(animation => animation.cancel());
+      window.removeEventListener("scroll", scheduleDepth);
+      window.removeEventListener("resize", scheduleDepth);
+      cancelAnimationFrame(frame);
+      if (tankMotion) tankMotion.style.transform = "";
+      textMotion.forEach(point => { point.style.transform = ""; });
+    };
+  }, []);
+
   return (
     <section
-      className="w-full relative overflow-hidden"
+      id="oxygen-gap"
+      className="oxygen-gap-section relative w-full overflow-hidden"
       aria-label="The oxygen access gap"
-      style={{ paddingBlock: "var(--spacing-section)" }}
+      style={{ paddingTop: "clamp(3rem, 5vw, 5rem)" }}
     >
-      {/* Content — max-width, centred */}
-      <div className="container-page relative" style={{ zIndex: 1 }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-          {/* Left: prose. Sits at the top of the column against the
-              container edge — the tank is at the bottom of the section, so
-              they don't collide vertically. */}
-          <div>
-            <h2 className="mb-6">
-              The oxygen access{" "}
-              <span style={{ color: "var(--color-coral)" }}>gap.</span>
-            </h2>
-            <p className="lead">
-              Across Nigerian hospitals, the gap isn&rsquo;t supply &mdash;{" "}
-              <span style={{ color: "var(--color-violet)" }}>
-                it&rsquo;s delivery, maintenance, and visibility.
-              </span>
-            </p>
-          </div>
+      <div className="container-page">
+        <header className="mx-auto max-w-2xl text-center">
+          <p className="eyebrow mb-3" style={{ color: "var(--color-muted)" }}>The problem</p>
+          <h2 className="mb-5" style={{
+            fontSize: "clamp(2.5rem, 1.2rem + 4.5vw, 4.5rem)",
+            lineHeight: 1.02,
+            letterSpacing: "-0.04em",
+            fontWeight: 600,
+          }}>
+            The oxygen<br />
+            <span style={{ color: "var(--color-coral)" }}>access gap.</span>
+          </h2>
+          <p className="mx-auto max-w-xl" style={{ fontSize: "18px", lineHeight: 1.55, color: "var(--color-muted)" }}>
+            The gap is between oxygen being available and oxygen reaching the patient who needs it.
+          </p>
+        </header>
 
-          {/* Right: Tea Green fact panel. On md+ its right edge is pinned to
-              the viewport wall — negative margin scales with viewport so the
-              panel always bleeds off the container padding AND any gutter
-              between the container and the viewport edge. */}
-          <aside
-            data-stat-group
-            className="p-8 md:p-10 lg:p-12 flex flex-col gap-8"
-            style={{
-              background: "var(--color-teagreen)",
-              color: "var(--color-ink)",
-              borderTopLeftRadius: "var(--radius-card)",
-              borderBottomLeftRadius: "var(--radius-card)",
-              marginRight:
-                "calc(-1 * (max(0px, (100vw - var(--container-max)) / 2) + var(--container-pad-x)))",
-            }}
-          >
-            {facts.map((f, i) => (
-              <div
-                key={f.headline}
-                data-stat-reveal
-                className="flex flex-col gap-3"
-                style={
-                  i > 0
-                    ? {
-                        paddingTop: "1.75rem",
-                        borderTop: "1px solid rgba(0,19,22,0.12)",
-                      }
-                    : undefined
-                }
-              >
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--text-h3)",
-                    lineHeight: "var(--text-h3--line-height)",
-                    letterSpacing: "var(--text-h3--letter-spacing)",
-                    fontWeight: 700,
-                    color: "var(--color-ink)",
-                  }}
-                >
-                  {f.headline}
-                </p>
-                <p
-                  style={{
-                    fontSize: "var(--text-p2)",
-                    lineHeight: 1.55,
-                    color: "var(--color-ink)",
-                    maxWidth: "38ch",
-                  }}
-                >
-                  {f.body}
-                </p>
-              </div>
-            ))}
-            {/* FACT NEEDED: verify these framing numbers with a citable source. */}
-          </aside>
+        <div ref={composition} className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_minmax(280px,360px)_1fr] items-center gap-8 lg:gap-12">
+          <div data-gap-drift className="order-2 lg:order-1 flex flex-col gap-8 lg:gap-14 lg:items-end">
+            {points.slice(0, 2).map(point => <GapPoint key={point.title} {...point} align="left-side" />)}
+          </div>
+          <div data-gap-tank className="oxygen-gap-tank relative order-1 lg:order-2 mx-auto w-full max-w-[360px] h-[340px] sm:h-[420px] lg:h-[500px]" aria-hidden="true">
+            {/* The source has transparent space to the right. Align the valve itself,
+                whose visual center sits about 19.5% across the original image. */}
+            <div data-gap-depth className="absolute inset-0" style={{ transformOrigin: "50% 100%" }}>
+            <Image
+              src={oxygenValve}
+              alt=""
+              width={800}
+              height={501}
+              sizes="800px"
+              style={{ position: "absolute", height: "100%", width: "auto", maxWidth: "none", left: "50%", bottom: "-1px", transform: "translateX(-19.5%)" }}
+            />
+            </div>
+          </div>
+          <div data-gap-drift className="order-3">
+            <GapPoint {...points[2]} />
+          </div>
         </div>
       </div>
-
-      {/* Bleed image — anchored to viewport LEFT, expanded to fill the
-          left ~half of the section. Sits at the bottom; text sits at the
-          top of the column so they don't visually collide. */}
-      <div
-        aria-hidden="true"
-        className="hidden md:block absolute bottom-0 left-0 pointer-events-none"
-        style={{
-          width: "clamp(440px, 52vw, 740px)",
-          transform: "translateY(-2%)",
-          zIndex: 0,
-        }}
-      >
-        <Image
-          src={oxygenValve}
-          alt=""
-          sizes="(min-width: 1280px) 740px, (min-width: 768px) 52vw, 0px"
-          placeholder="blur"
-          priority={false}
-          style={{ width: "100%", height: "auto" }}
-        />
-      </div>
-
     </section>
+  );
+}
+
+function GapPoint({ title, body, align }: { title: string; body: string; align?: "left-side" }) {
+  return (
+    <div data-gap-copy className={`relative max-w-xs ${align ? "lg:text-right" : ""}`}>
+      <h3 className="mb-3" style={{ fontSize: "clamp(1.25rem, 1rem + 0.7vw, 1.625rem)", fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1.15 }}>{title}</h3>
+      <p style={{ fontSize: "16px", lineHeight: 1.6, color: "var(--color-muted)" }}>{body}</p>
+    </div>
   );
 }

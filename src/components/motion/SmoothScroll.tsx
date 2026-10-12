@@ -1,42 +1,45 @@
 "use client";
 
 import { useEffect } from "react";
-import Lenis from "lenis";
+import { usePathname } from "next/navigation";
+import type Lenis from "lenis";
+import "./motion.css";
 
-/**
- * SmoothScroll — mounted once in the root layout. Wraps native scroll with
- * Lenis's inertia-based smoothing so parallax and scroll-driven transforms
- * feel silkier. Respects prefers-reduced-motion (Lenis initialises with
- * near-zero smoothing under that setting so scroll behaves natively).
- *
- * All existing scroll listeners (Parallax, HeroWash, HeroVideo, StatReveal,
- * SectionReveal, ImageReveal) continue to fire on the window `scroll` event
- * that Lenis dispatches — no per-component changes needed.
- */
+/** Ease desktop wheel input on the native document, preserving sticky layouts. */
 export function SmoothScroll() {
+  const pathname = usePathname();
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    const lenis = new Lenis({
-      duration: reduced ? 0.1 : 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: !reduced,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-    });
-
-    let raf = 0;
-    const loop = (time: number) => {
-      lenis.raf(time);
-      raf = window.requestAnimationFrame(loop);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const desktop = window.matchMedia("(pointer: fine)");
+    let instance: Lenis | undefined;
+    let disposed = false;
+    let generation = 0;
+    const configure = async () => {
+      const current = ++generation;
+      instance?.destroy();
+      instance = undefined;
+      if (reduced.matches || !desktop.matches) return;
+      const { default: LenisScroll } = await import("lenis");
+      if (disposed || current !== generation) return;
+      instance = new LenisScroll({
+        autoRaf: true,
+        smoothWheel: true,
+        syncTouch: false,
+        lerp: 0.13,
+        anchors: { offset: -88 },
+        prevent: node => Boolean(node.closest("[data-lenis-prevent], textarea, select, [role='dialog']")),
+      });
     };
-    raf = window.requestAnimationFrame(loop);
-
+    void configure();
+    reduced.addEventListener("change", configure);
+    desktop.addEventListener("change", configure);
     return () => {
-      if (raf) window.cancelAnimationFrame(raf);
-      lenis.destroy();
+      disposed = true;
+      ++generation;
+      instance?.destroy();
+      reduced.removeEventListener("change", configure);
+      desktop.removeEventListener("change", configure);
     };
-  }, []);
-
+  }, [pathname]);
   return null;
 }

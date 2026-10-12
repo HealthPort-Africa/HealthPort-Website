@@ -1,20 +1,17 @@
 import type { Metadata } from "next";
 import { OaasIntro } from "@/components/oaas/OaasIntro";
-import { WhyOaas } from "@/components/oaas/WhyOaas";
 import { ProcessTeaser } from "@/components/oaas/ProcessTeaser";
-import { InfrastructureVideo } from "@/components/oaas/InfrastructureVideo";
+import { WhyOaas } from "@/components/oaas/WhyOaas";
 import { WhatsIncluded } from "@/components/oaas/WhatsIncluded";
-import { Solar } from "@/components/oaas/Solar";
 import { OaasJourney } from "@/components/oaas/OaasJourney";
 import { HospitalGetsHealthPortTakes } from "@/components/oaas/HospitalGetsHealthPortTakes";
+import { FAQ } from "@/components/oaas/FAQ";
 import { Eligibility } from "@/components/oaas/Eligibility";
-import { CaseHighlight } from "@/components/oaas/CaseHighlight";
-import { OaasClosingCTA } from "@/components/oaas/OaasClosingCTA";
 
 export const metadata: Metadata = {
   title: "Oxygen as a Service",
   description:
-    "HealthPort delivers Oxygen as a Service — a managed model that takes cylinders, reticulation, monitoring, and continuous optimisation off the hospital's plate. Pay only for what you use.",
+    "HealthPort delivers Oxygen as a Service, a managed model that takes cylinders, reticulation, monitoring, and continuous optimisation off the hospital's plate. Pay only for what you use.",
   openGraph: {
     title: "Oxygen as a Service · HealthPort",
     description:
@@ -28,16 +25,16 @@ export default function OaaSPage() {
   return (
     <>
       <OaasIntro />
-      <WhyOaas />
+      {/* ProcessTeaser replaces the previous InfrastructureVideo panel
+          directly under "What is Oxygen as a Service?" — per client
+          direction the video slot became this animated teaser. */}
       <ProcessTeaser />
-      <InfrastructureVideo />
+      <WhyOaas />
       <WhatsIncluded />
-      <Solar />
       <OaasJourney />
       <HospitalGetsHealthPortTakes />
+      <FAQ />
       <Eligibility />
-      <CaseHighlight />
-      <OaasClosingCTA />
     </>
   );
 }

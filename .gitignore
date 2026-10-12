@@ -2,6 +2,10 @@
 CLAUDE.md
 DESIGN-BRIEF.md
 
+# Claude Code local files
+.claude/
+.claude.json
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -39,6 +43,8 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but keep the template (no secrets, documents the required vars)
+!.env.example
 
 # vercel
 .vercel

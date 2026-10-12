@@ -46,9 +46,8 @@ export function WhatWeDoCarousel({
 
   return (
     <div
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden aspect-square sm:aspect-video"
       style={{
-        aspectRatio: "16 / 9",
         borderRadius: "28px",
         background: "#0b0f10",
       }}
@@ -102,11 +101,10 @@ export function WhatWeDoCarousel({
       {/* Caption block — bottom-left, cinematic */}
       <div
         key={`cap-${idx}`}
-        className="absolute flex flex-col gap-3"
+        className="absolute flex flex-col gap-3 bottom-16 sm:bottom-[clamp(28px,4vw,56px)]"
         style={{
           left: "clamp(24px, 4vw, 56px)",
           right: "clamp(24px, 4vw, 56px)",
-          bottom: "clamp(28px, 4vw, 56px)",
           maxWidth: "38rem",
           animation:
             "billing-slide-in 620ms cubic-bezier(0.22,1,0.36,1) both",

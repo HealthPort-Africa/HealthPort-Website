@@ -1,0 +1,29 @@
+/* Stable section geometry keeps scroll progress and anchor destinations accurate. */
+main#main > section { content-visibility: visible; contain-intrinsic-size: none; }
+html.lenis, html.lenis body { height: auto; }
+html.lenis-smooth { scroll-behavior: auto !important; }
+.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis-stopped { overflow: hidden; }
+
+.healthport-faq-neutral-row { transition: background-color 220ms ease; }
+.healthport-faq-neutral-row:hover,
+.healthport-faq-neutral-row[open] { background: #efefeb !important; }
+.healthport-faq-neutral-row > summary:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+  border-radius: 16px;
+}
+@supports (interpolate-size: allow-keywords) {
+  .healthport-faq-neutral-row { interpolate-size: allow-keywords; }
+  .healthport-faq-neutral-row::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition: block-size 420ms cubic-bezier(0.22,1,0.36,1), opacity 300ms ease, content-visibility 420ms allow-discrete;
+  }
+  .healthport-faq-neutral-row[open]::details-content { block-size: auto; opacity: 1; }
+}
+.healthport-faq-neutral-row[open] > .healthport-faq-answer { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .healthport-faq-neutral-row::details-content { transition: none; }
+}

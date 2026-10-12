@@ -1,82 +1,170 @@
 /**
- * About §5 — Leadership grid: photo, name, role, two-line bio. Ships as
- * four labeled placeholder cards until client supplies headshots and bios
- * (see open_client_decisions).
+ * About §5 — Leadership.
+ *
+ * Four client-supplied portraits in a static responsive grid.
+ *
+ * Photos: client-supplied team portraits. Roles are provisional preview copy.
  */
-const slots = [
-  { role: "Founder & CEO" },
-  { role: "Head of Operations" },
-  { role: "Head of Engineering" },
-  { role: "Head of OxyIntel" },
+import Image from "next/image";
+
+type TeamMember = {
+  key: string;
+  name: string;
+  role: string;
+  image: string;
+};
+
+// Names are taken from the supplied photo filenames.
+// Role titles are provisional, requested for the design preview; replace when confirmed.
+const team: TeamMember[] = [
+  {
+    key: "toyeeb",
+    name: "Toyeeb",
+    role: "Engineering Lead",
+    image: "/photos/team/toyeeb.jpg",
+  },
+  {
+    key: "francis",
+    name: "Francis",
+    role: "Operations Lead",
+    image: "/photos/team/francis.jpeg",
+  },
+  {
+    key: "aisha",
+    name: "Aisha",
+    role: "Partnerships Lead",
+    image: "/photos/team/aisha.jpeg",
+  },
+  {
+    key: "mariam",
+    name: "Mariam",
+    role: "Clinical Programmes Lead",
+    image: "/photos/team/mariam.png",
+  },
 ];
+
+const leadershipOrder = ["aisha", "mariam", "toyeeb", "francis"];
+const orderedTeam = leadershipOrder.map(key => team.find(member => member.key === key)!);
 
 export function Leadership() {
   return (
-    <section className="chapter" aria-label="Leadership">
-      <div className="chapter-inner">
-        <p className="eyebrow mb-8">Leadership</p>
-        <h2 className="max-w-3xl mb-16">The people building this.</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-          {slots.map((s, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-4"
-              style={{
-                border: "1px solid var(--color-keyline)",
-                borderRadius: "var(--radius-card)",
-                padding: "1.25rem",
-              }}
-            >
-              <div
-                style={{
-                  aspectRatio: "3 / 4",
-                  background:
-                    "color-mix(in srgb, var(--color-violet) 8%, var(--color-parchment))",
-                  borderRadius: "var(--radius-control)",
-                }}
-                aria-label="Headshot placeholder"
-                role="img"
-              />
-              <div className="flex flex-col gap-1">
-                <p
-                  style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: "var(--text-h5)",
-                    fontWeight: 600,
-                    color: "var(--color-muted)",
-                  }}
-                >
-                  Name pending
-                </p>
-                <p
-                  className="eyebrow"
-                  style={{ color: "var(--color-teal)" }}
-                >
-                  {s.role}
-                </p>
-                <p
-                  className="mt-2"
-                  style={{
-                    color: "var(--color-muted)",
-                    fontSize: "var(--text-p3)",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  Bio pending client input.
-                </p>
-              </div>
-            </div>
-          ))}
+    <section
+      id="leadership"
+      className="w-full"
+      aria-label="Leadership"
+      style={{ paddingBlock: "var(--spacing-section)" }}
+    >
+      <div className="container-page">
+        <div className="max-w-3xl mb-12 md:mb-16" data-parallax="-0.06">
+          <p
+            className="eyebrow mb-5"
+            style={{ color: "var(--color-violet)" }}
+          >
+            Leadership
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "clamp(2rem, 1.5rem + 1.8vw, 3rem)",
+              fontWeight: 600,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
+              color: "var(--color-heading)",
+              margin: 0,
+              marginBottom: "1rem",
+              textWrap: "balance",
+            }}
+          >
+            The people building this.
+          </h2>
+          <p
+            style={{
+              fontSize: "clamp(15px, 1vw, 17px)",
+              lineHeight: 1.6,
+              color: "var(--color-muted)",
+              margin: 0,
+            }}
+          >
+            A small, deliberate team of engineers, operators, and
+            clinicians building oxygen infrastructure for a continent.
+          </p>
         </div>
+      </div>
 
-        <p
-          className="mt-6 text-[13px]"
-          style={{ color: "var(--color-muted)" }}
-        >
-          Headshots, names, and bios pending client input.
-        </p>
+      <div className="container-page">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 list-none">
+          {orderedTeam.map(member => (
+            <li key={member.key} className="min-w-0">
+              <PolaroidCard member={member} />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
+  );
+}
+
+/* --------------------------- PolaroidCard ---------------------------- */
+
+function PolaroidCard({ member }: { member: TeamMember }) {
+  return (
+    <article
+      className="w-full min-w-0 h-full overflow-hidden"
+      style={
+        {
+          background: "var(--color-white)",
+          border: "1px solid var(--color-keyline)",
+          borderRadius: "20px",
+          position: "relative",
+        } as React.CSSProperties
+      }
+      role="group"
+      aria-label={`${member.name}, ${member.role}`}
+    >
+      {/* Consistent portrait framing, using the supplied team photography. */}
+      <div
+        className="relative w-full overflow-hidden"
+        style={{
+          aspectRatio: "3 / 4",
+          background: "var(--color-ink)",
+        }}
+      >
+        <Image
+          src={member.image}
+          alt={`${member.name}, ${member.role}`}
+          fill
+          sizes="(min-width: 1280px) 228px, (min-width: 1024px) 22vw, (min-width: 640px) 44vw, 90vw"
+          style={{ objectFit: "cover", objectPosition: "50% 30%" }}
+        />
+      </div>
+
+      {/* Caption */}
+      <div className="flex flex-col px-5 py-5">
+        <p
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: "clamp(14px, 1vw, 16px)",
+            fontWeight: 700,
+            lineHeight: 1.25,
+            letterSpacing: "-0.005em",
+            color: "var(--color-heading)",
+            margin: 0,
+            marginBottom: "2px",
+          }}
+        >
+          {member.name}
+        </p>
+        <p
+          className="eyebrow"
+          style={{
+            fontSize: "10px",
+            color: "var(--color-muted)",
+            letterSpacing: "0.14em",
+          }}
+        >
+          {member.role}
+        </p>
+      </div>
+    </article>
   );
 }

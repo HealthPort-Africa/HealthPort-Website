@@ -5,8 +5,7 @@ import { useEffect, useRef } from "react";
 /**
  * ScrollScale — wraps children in a container that scales up as the element
  * scrolls through the viewport (starts small, grows to full/beyond as it
- * enters, then holds). Same mechanic as HeroVideo's expand-sideways effect,
- * generalised for reuse. rAF-throttled, GPU transform, respects
+ * enters, then holds). rAF-throttled, GPU transform, respects
  * prefers-reduced-motion.
  *
  * Defaults: 0.85 → 1.15 scale, `center top` origin so growth feels like a
