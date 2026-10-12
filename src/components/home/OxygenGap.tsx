@@ -1,230 +1,133 @@
-/**
- * OxygenGap — the "problem" chapter, restrained.
- *
- * Transparent valve PNG bleeds in from the LEFT viewport edge with no card
- * or background around it — that no-container floating gives the section its
- * immersive, 3D-like anchor. Prose + a three-row dashboard (Most · Hours ·
- * Unseen) live in the right column so they never overlap the image.
- *
- * The row labels are color-coded Teal · Coral · Violet — the same trio used
- * for the shimmer words in the testimonial payoff ("It saves cost / time /
- * life"). Typography rhyme without changing the crisis wording.
- *
- * Motion: row items fade-up-and-settle with an 80 ms stagger via
- * [[StatReveal]] client leaf.
- *
- * Facts marked `FACT NEEDED` until a citable source is provided.
- */
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import oxygenValve from "../../../public/images/oxygen-valve.png";
 
-type Row = {
-  label: string;
-  color: string; // one of the three testimonial shimmer colors
-  body: React.ReactNode;
-};
-
-// Original three failure modes restated as a color-coded dashboard. Labels
-// pick up the three testimonial-payoff brand colors (Teal / Coral / Violet)
-// so the typography still rhymes with the "It saves cost / time / life"
-// moment down the page, even though the label words themselves stay as the
-// original crisis nouns.
-const rows: Row[] = [
+const points = [
   {
-    label: "Most",
-    color: "var(--color-teal)",
-    body: (
-      <>
-        hospital departments{" "}
-        <strong className="font-semibold">can&rsquo;t track</strong> how much
-        oxygen is available where care actually happens.
-      </>
-    ),
+    title: "Limited visibility",
+    body: "Care teams need to know how much oxygen is available where care actually happens.",
   },
   {
-    label: "Hours",
-    color: "var(--color-coral)",
-    body: (
-      <>
-        to days between an empty cylinder and a refill reaching the ward
-        that <strong className="font-semibold">actually needs it.</strong>
-      </>
-    ),
+    title: "Delayed refills",
+    body: "An empty cylinder means waiting for a refill to reach the ward that needs it.",
   },
   {
-    label: "Last mile",
-    color: "var(--color-violet)",
-    body: (
-      <>
-        The gap sits between depot and bedside, where coordination and
-        delivery routinely stall{" "}
-        <strong className="font-semibold">
-          even when supply exists upstream.
-        </strong>
-      </>
-    ),
+    title: "The last mile",
+    body: "Supply upstream only helps when coordination and delivery carry it all the way to the bedside.",
   },
 ];
 
 export function OxygenGap() {
+  const composition = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = composition.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const animations: Animation[] = [];
+    const tankMotion = el.querySelector<HTMLElement>("[data-gap-depth]");
+    const textMotion = Array.from(el.querySelectorAll<HTMLElement>("[data-gap-drift]"));
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    let frame = 0;
+    const updateDepth = () => {
+      frame = 0;
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight + rect.height)));
+      // Scaling from the bottom keeps the cylinder shoulder on the section boundary.
+      if (tankMotion) tankMotion.style.transform = desktop.matches ? `scale(${1 + progress * 0.045})` : "";
+      textMotion.forEach((point, index) => {
+        point.style.transform = desktop.matches ? `translateY(${(0.5 - progress) * (index ? 24 : 16)}px)` : "";
+      });
+    };
+    const scheduleDepth = () => { if (!frame) frame = requestAnimationFrame(updateDepth); };
+    window.addEventListener("scroll", scheduleDepth, { passive: true });
+    window.addEventListener("resize", scheduleDepth);
+    scheduleDepth();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      const tank = el.querySelector<HTMLElement>("[data-gap-tank]");
+      if (tank) animations.push(tank.animate(
+        [{ opacity: 0, transform: "translateY(56px)" }, { opacity: 1, transform: "translateY(0)" }],
+        { duration: 1000, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" }
+      ));
+      el.querySelectorAll<HTMLElement>("[data-gap-copy]").forEach((point, index) => {
+        animations.push(point.animate(
+          [{ opacity: 0, transform: "translateY(12px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: 650, delay: 280 + index * 100, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" }
+        ));
+      });
+      observer.disconnect();
+    }, { threshold: 0.15 });
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      animations.forEach(animation => animation.cancel());
+      window.removeEventListener("scroll", scheduleDepth);
+      window.removeEventListener("resize", scheduleDepth);
+      cancelAnimationFrame(frame);
+      if (tankMotion) tankMotion.style.transform = "";
+      textMotion.forEach(point => { point.style.transform = ""; });
+    };
+  }, []);
+
   return (
     <section
-      className="w-full relative overflow-hidden"
+      id="oxygen-gap"
+      className="oxygen-gap-section relative w-full overflow-hidden"
       aria-label="The oxygen access gap"
-      style={{ paddingBlock: "var(--spacing-section)" }}
+      style={{ paddingTop: "clamp(3rem, 5vw, 5rem)" }}
     >
-      {/* Ambient Coral wash — low-opacity radial pooled in the BOTTOM-RIGHT
-          corner, well behind the row dashboard. Reinforces the section's
-          existing tension color (eyebrow, "access gap." punchline, "Hours"
-          row) without introducing a new hue. Masked to fade toward the top
-          so the wash whispers rather than announces itself. Pairs against
-          the cool valve diagram bleeding from the bottom-LEFT — the section
-          reads as a diagonal: problem-diagram left, consequence-atmosphere
-          right. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          zIndex: 0,
-          background:
-            "radial-gradient(ellipse 70% 55% at 92% 108%, rgba(239, 100, 97, 0.20), transparent 65%)",
-          WebkitMaskImage:
-            "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.4) 78%, transparent 100%)",
-          maskImage:
-            "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.4) 78%, transparent 100%)",
-        }}
-      />
+      <div className="container-page">
+        <header className="mx-auto max-w-2xl text-center">
+          <p className="eyebrow mb-3" style={{ color: "var(--color-muted)" }}>The problem</p>
+          <h2 className="mb-5" style={{
+            fontSize: "clamp(2.5rem, 1.2rem + 4.5vw, 4.5rem)",
+            lineHeight: 1.02,
+            letterSpacing: "-0.04em",
+            fontWeight: 600,
+          }}>
+            The oxygen<br />
+            <span style={{ color: "var(--color-coral)" }}>access gap.</span>
+          </h2>
+          <p className="mx-auto max-w-xl" style={{ fontSize: "18px", lineHeight: 1.55, color: "var(--color-muted)" }}>
+            The gap is between oxygen being available and oxygen reaching the patient who needs it.
+          </p>
+        </header>
 
-      {/* Bleed image — transparent PNG anchored to the section's BOTTOM-LEFT
-          corner and pushed slightly past both edges so it literally bleeds
-          off-screen on the left and the bottom. No card, no bg — the raw
-          PNG floats and gives the section its immersive anchor.
-          Height follows the source aspect (800×501) so the composition is
-          preserved as it scales. */}
-      <div
-        aria-hidden="true"
-        className="hidden md:block absolute pointer-events-none"
-        style={{
-          left: "-3vw",
-          bottom: "-1vw",
-          width: "clamp(680px, 70vw, 1120px)",
-          aspectRatio: "800 / 501",
-          zIndex: 0,
-        }}
-      >
-        <Image
-          src={oxygenValve}
-          alt=""
-          fill
-          sizes="(min-width: 768px) 62vw, 0px"
-          placeholder="blur"
-          priority={false}
-          style={{ objectFit: "contain", objectPosition: "left bottom" }}
-        />
-      </div>
-
-      <div className="container-page relative" style={{ zIndex: 1 }}>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-14 items-start">
-          {/* Left spacer — reserves visual room for the bleed image. */}
-          <div className="hidden md:block md:col-span-3" aria-hidden />
-
-          {/* Content column — prose stacked over the three-row dashboard.
-              The rows sit tight under the subhead (no big gap) and each row
-              is a single line: a wide-tracked colored LABEL + a plain-Ink
-              statement, keyline separated. All type capped at 14px per spec. */}
-          <div className="col-span-12 md:col-span-9 flex flex-col gap-8 md:gap-10">
-            {/* Intro block — right-aligned on desktop so it balances
-                the bleed valve image on the left of the section.
-                Reads left→right on mobile where the image is
-                hidden. */}
-            <div className="md:text-right md:ml-auto">
-              <p
-                className="eyebrow mb-4"
-                style={{ color: "var(--color-violet)" }}
-              >
-                The problem
-              </p>
-              <h2
-                className="mb-6 md:mb-8"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(2.5rem, 1.2rem + 4.5vw, 4.5rem)",
-                  lineHeight: 0.98,
-                  letterSpacing: "-0.03em",
-                  fontWeight: 700,
-                  textWrap: "balance",
-                }}
-              >
-                The oxygen
-                <br />
-                <span style={{ color: "var(--color-coral)" }}>
-                  access gap.
-                </span>
-              </h2>
-              <p
-                className="md:ml-auto"
-                style={{
-                  fontSize: "18px",
-                  lineHeight: 1.55,
-                  color: "var(--color-muted)",
-                  maxWidth: "44rem",
-                }}
-              >
-                Across sub-Saharan African hospitals, the gap isn&rsquo;t
-                supply.{" "}
-                <span style={{ color: "var(--color-violet)" }}>
-                  It&rsquo;s the last mile between oxygen being available
-                  and oxygen reaching the patient who needs it.
-                </span>
-              </p>
+        <div ref={composition} className="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_minmax(280px,360px)_1fr] items-center gap-8 lg:gap-12">
+          <div data-gap-drift className="order-2 lg:order-1 flex flex-col gap-8 lg:gap-14 lg:items-end">
+            {points.slice(0, 2).map(point => <GapPoint key={point.title} {...point} align="left-side" />)}
+          </div>
+          <div data-gap-tank className="oxygen-gap-tank relative order-1 lg:order-2 mx-auto w-full max-w-[360px] h-[340px] sm:h-[420px] lg:h-[500px]" aria-hidden="true">
+            {/* The source has transparent space to the right. Align the valve itself,
+                whose visual center sits about 19.5% across the original image. */}
+            <div data-gap-depth className="absolute inset-0" style={{ transformOrigin: "50% 100%" }}>
+            <Image
+              src={oxygenValve}
+              alt=""
+              width={800}
+              height={501}
+              sizes="800px"
+              style={{ position: "absolute", height: "100%", width: "auto", maxWidth: "none", left: "50%", bottom: "-1px", transform: "translateX(-19.5%)" }}
+            />
             </div>
-
-            {/* Three rows — same editorial treatment as the h2: big colored
-                display word acting as a mini-heading, plain-Ink body below.
-                Label picks up the testimonial trio (Teal / Coral / Violet)
-                so the typography still rhymes with the payoff further down. */}
-            <div data-stat-group style={{ maxWidth: "44rem" }}>
-              {rows.map((r, i) => (
-                <div
-                  key={r.label}
-                  data-stat-reveal
-                  className="py-6 md:py-7 flex flex-col gap-2"
-                  style={
-                    i > 0
-                      ? { borderTop: "1px solid var(--color-keyline)" }
-                      : undefined
-                  }
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem)",
-                      lineHeight: 1,
-                      letterSpacing: "-0.02em",
-                      fontWeight: 700,
-                      color: r.color,
-                      margin: 0,
-                    }}
-                  >
-                    {r.label}
-                  </p>
-                  <p
-                    style={{
-                      fontSize: "18px",
-                      lineHeight: 1.5,
-                      color: "var(--color-fg)",
-                      margin: 0,
-                    }}
-                  >
-                    {r.body}
-                  </p>
-                </div>
-              ))}
-            </div>
-            {/* FACT NEEDED: verify these framing numbers with a citable source. */}
+          </div>
+          <div data-gap-drift className="order-3">
+            <GapPoint {...points[2]} />
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function GapPoint({ title, body, align }: { title: string; body: string; align?: "left-side" }) {
+  return (
+    <div data-gap-copy className={`relative max-w-xs ${align ? "lg:text-right" : ""}`}>
+      <h3 className="mb-3" style={{ fontSize: "clamp(1.25rem, 1rem + 0.7vw, 1.625rem)", fontWeight: 600, letterSpacing: "-0.025em", lineHeight: 1.15 }}>{title}</h3>
+      <p style={{ fontSize: "16px", lineHeight: 1.6, color: "var(--color-muted)" }}>{body}</p>
+    </div>
   );
 }

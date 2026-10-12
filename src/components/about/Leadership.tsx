@@ -1,15 +1,9 @@
 /**
  * About §5 — Leadership.
  *
- * White polaroid cards in a continuous horizontal ticker. The whole
- * row auto-slides left; the reader can also drag/scroll horizontally
- * to move it themselves. Ticker pauses on hover so cards stay
- * readable and the reader has full control while inspecting.
+ * Four client-supplied portraits in a static responsive grid.
  *
- * Photos: portrait-oriented Unsplash placeholders — flagged for
- * client replacement with real headshots. The constitution normally
- * bans stock, but the client explicitly requested Unsplash here
- * until real portraits land.
+ * Photos: client-supplied team portraits. Roles are provisional preview copy.
  */
 import Image from "next/image";
 
@@ -18,53 +12,44 @@ type TeamMember = {
   name: string;
   role: string;
   image: string;
-  tilt: string;
-  pin: string;
 };
 
-// Portrait Unsplash photos — stable direct URLs. `?fit=crop&crop=faces&w=800&h=1200`
-// gives us a 3:4 portrait crop centred on the face.
-const IMG =
-  "https://images.unsplash.com/photo-";
-
+// Names are taken from the supplied photo filenames.
+// Role titles are provisional, requested for the design preview; replace when confirmed.
 const team: TeamMember[] = [
   {
-    key: "founder-ceo",
-    name: "Dr. Emmanuel Adeyemi",
-    role: "Founder & CEO",
-    image: `${IMG}1500648767791-00dcc994a43e?fit=crop&crop=faces&w=800&h=1200`,
-    tilt: "-3.5deg",
-    pin: "var(--color-coral)",
+    key: "toyeeb",
+    name: "Toyeeb",
+    role: "Engineering Lead",
+    image: "/photos/team/toyeeb.jpg",
   },
   {
-    key: "head-operations",
-    name: "Adaeze Nnamdi",
-    role: "Head of Operations",
-    image: `${IMG}1573496359142-b8d87734a5a2?fit=crop&crop=faces&w=800&h=1200`,
-    tilt: "2.5deg",
-    pin: "var(--color-violet)",
+    key: "francis",
+    name: "Francis",
+    role: "Operations Lead",
+    image: "/photos/team/francis.jpeg",
   },
   {
-    key: "head-engineering",
-    name: "Tunde Bakare",
-    role: "Head of Engineering",
-    image: `${IMG}1507003211169-0a1dd7228f2d?fit=crop&crop=faces&w=800&h=1200`,
-    tilt: "-2deg",
-    pin: "var(--color-teal)",
+    key: "aisha",
+    name: "Aisha",
+    role: "Partnerships Lead",
+    image: "/photos/team/aisha.jpeg",
   },
   {
-    key: "head-oxyintel",
-    name: "Dr. Chidinma Okonkwo",
-    role: "Head of OxyIntel",
-    image: `${IMG}1580489944761-15a19d654956?fit=crop&crop=faces&w=800&h=1200`,
-    tilt: "3deg",
-    pin: "var(--color-sky-deep)",
+    key: "mariam",
+    name: "Mariam",
+    role: "Clinical Programmes Lead",
+    image: "/photos/team/mariam.png",
   },
 ];
+
+const leadershipOrder = ["aisha", "mariam", "toyeeb", "francis"];
+const orderedTeam = leadershipOrder.map(key => team.find(member => member.key === key)!);
 
 export function Leadership() {
   return (
     <section
+      id="leadership"
       className="w-full"
       aria-label="Leadership"
       style={{ paddingBlock: "var(--spacing-section)" }}
@@ -106,20 +91,11 @@ export function Leadership() {
         </div>
       </div>
 
-      {/* Ticker — full-viewport-width; the track continuously slides
-          left on a CSS animation. Doubled team array in JSX so the
-          translateX(-50%) loop wraps seamlessly. The container also
-          allows manual horizontal scroll, so the reader can drag or
-          swipe past the auto-motion. */}
-      <div className="team-ticker">
-        <ul className="team-ticker__track">
-          {[...team, ...team].map((m, i) => (
-            <li
-              key={`${m.key}-${i}`}
-              className="team-ticker__item"
-              aria-hidden={i >= team.length}
-            >
-              <PolaroidCard member={m} />
+      <div className="container-page">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 list-none">
+          {orderedTeam.map(member => (
+            <li key={member.key} className="min-w-0">
+              <PolaroidCard member={member} />
             </li>
           ))}
         </ul>
@@ -133,74 +109,37 @@ export function Leadership() {
 function PolaroidCard({ member }: { member: TeamMember }) {
   return (
     <article
-      className="flex-shrink-0"
+      className="w-full min-w-0 h-full overflow-hidden"
       style={
         {
-          width: "clamp(220px, 20vw, 280px)",
           background: "var(--color-white)",
           border: "1px solid var(--color-keyline)",
-          borderRadius: "10px",
-          padding: "14px 14px 20px",
-          transform: `rotate(${member.tilt})`,
+          borderRadius: "20px",
           position: "relative",
         } as React.CSSProperties
       }
       role="group"
       aria-label={`${member.name}, ${member.role}`}
     >
-      {/* Thumbtack — bigger colored disc with an inner highlight so
-          it reads as a physical pin head, not just a dot. */}
-      <span
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: "-12px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "22px",
-          height: "22px",
-          borderRadius: "50%",
-          background: member.pin,
-          border: "2px solid var(--color-white)",
-          zIndex: 2,
-        }}
-      >
-        <span
-          style={{
-            position: "absolute",
-            top: "3px",
-            left: "3px",
-            width: "6px",
-            height: "6px",
-            borderRadius: "50%",
-            background: "rgba(255, 255, 255, 0.55)",
-          }}
-        />
-      </span>
-
-      {/* Portrait photo — 3:4 aspect, cropped to face by the Unsplash
-          `crop=faces` param. */}
+      {/* Consistent portrait framing, using the supplied team photography. */}
       <div
         className="relative w-full overflow-hidden"
         style={{
           aspectRatio: "3 / 4",
-          borderRadius: "4px",
           background: "var(--color-ink)",
-          marginBottom: "14px",
         }}
       >
         <Image
           src={member.image}
           alt={`${member.name}, ${member.role}`}
           fill
-          sizes="(min-width: 768px) 20vw, 60vw"
-          style={{ objectFit: "cover" }}
-          unoptimized
+          sizes="(min-width: 1280px) 228px, (min-width: 1024px) 22vw, (min-width: 640px) 44vw, 90vw"
+          style={{ objectFit: "cover", objectPosition: "50% 30%" }}
         />
       </div>
 
       {/* Caption */}
-      <div className="flex flex-col items-center text-center">
+      <div className="flex flex-col px-5 py-5">
         <p
           style={{
             fontFamily: "var(--font-display)",

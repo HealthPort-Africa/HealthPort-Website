@@ -30,7 +30,7 @@ export function OxyIntelHero() {
           ScrollCue to the bottom. Aligned to the container's LEFT
           margin — kicker, h1 and sub all hang against the container
           edge instead of centering. */}
-      <div className="container-page relative">
+      <div className="container-page relative w-full min-w-0">
         <div
           className="w-full flex flex-col items-start text-left"
           data-parallax="-0.08"

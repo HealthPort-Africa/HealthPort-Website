@@ -1,24 +1,24 @@
 import Link from "next/link";
-import { HeroVideo } from "@/components/home/HeroVideo";
+import { HeroTicker } from "@/components/home/HeroTicker";
 import { HeroWash } from "@/components/shared/HeroWash";
 
 export function Hero() {
   return (
     <section
-      className="relative w-full overflow-hidden isolate"
+      className="relative w-full overflow-hidden isolate flex flex-col"
       style={{
-        paddingTop: "clamp(4rem, 3rem + 5vw, 7rem)",
-        paddingBottom: "clamp(4rem, 3rem + 6vw, 8rem)",
+        minHeight: "calc(100svh - 4.625rem)",
+        paddingTop: "clamp(2rem, 4vw, 4rem)",
       }}
       aria-label="Never worry about oxygen again"
     >
       {/* Atmospheric wash — parallax'd client leaf. */}
       <HeroWash />
 
-      <div className="container-page relative">
+      <div className="container-page relative w-full flex-1 flex items-center pb-10">
         {/* Parallax on the whole hero copy block so eyebrow, headline,
             sub-line and CTAs move as one unit (no per-element overlap). */}
-        <div className="flex flex-col items-center text-center" data-parallax="-0.1">
+        <div className="w-full flex flex-col items-center text-center" data-parallax="-0.1">
           <p className="eyebrow mb-6">Oxygen as a Service</p>
           <h1 className="max-w-4xl mb-8">
             Never worry about
@@ -37,7 +37,7 @@ export function Hero() {
             HealthPort delivers reliable oxygen infrastructure. You focus
             on patient care while we ensure a continuous oxygen supply.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 mb-16 md:mb-20">
+          <div className="flex flex-wrap justify-center gap-3">
             <Link href="/contact" className="btn-primary">
               Book an assessment
               <ArrowRight />
@@ -46,10 +46,13 @@ export function Hero() {
               How OaaS works
             </Link>
           </div>
-
-          <HeroVideo />
         </div>
       </div>
+
+      {/* Hero photo ticker — pinned to the bottom of the hero section,
+          spans the full viewport width (sits outside the centered flex
+          column so it isn't shrunk to the container's width). */}
+      <HeroTicker />
     </section>
   );
 }

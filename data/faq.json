@@ -1,0 +1,54 @@
+[
+  {
+    "question": "Does HealthPort provide an oxygen plant when we sign a contract?",
+    "answer": "Not necessarily. We assess each facility's oxygen needs and determine whether an oxygen plant or a storage-based solution is the most appropriate option to ensure a continuous supply of oxygen."
+  },
+  {
+    "question": "What does HealthPort provide to my facility?",
+    "answer": "HealthPort provides a reliable oxygen supply, the appropriate infrastructure solution for your facility, ongoing support, and training. Where needed, pulse oximeters and oxygen gauges may also be provided at the start of the contract."
+  },
+  {
+    "question": "How does Oxygen-as-a-Service work?",
+    "answer": "HealthPort manages your hospital’s oxygen needs end-to-end, from supply and production to delivery, monitoring, and ongoing support, helping ensure reliable oxygen availability. You pay for actual oxygen used."
+  },
+  {
+    "question": "How does billing work?",
+    "answer": "You pay based on the oxygen your hospital actually uses. HealthPort manages the oxygen supply end-to-end, making costs more predictable while reducing the burden of managing oxygen procurement, logistics, and supply."
+  },
+  {
+    "question": "Does HealthPort provide training for hospital staff?",
+    "answer": "Yes. We provide clinical training for nurses and technical training for engineers and other relevant technical staff to support safe and effective oxygen use, cylinder handling, and system operation where applicable."
+  },
+  {
+    "question": "Does HealthPort provide pulse oximeters and oxygen gauges?",
+    "answer": "Where needed, HealthPort may provide pulse oximeters and oxygen gauges at the start of the contract. These are provided based on the facility's needs and are not guaranteed for every facility."
+  },
+  {
+    "question": "How do you determine what solution my facility needs?",
+    "answer": "We conduct a needs assessment to understand your facility's oxygen requirements, existing infrastructure, and operational needs. Based on this assessment, we recommend the most appropriate solution."
+  },
+  {
+    "question": "What happens if we need an emergency oxygen refill?",
+    "answer": "HealthPort works with the facility to respond to urgent oxygen requirements and coordinate replenishment to help minimize interruptions to oxygen supply."
+  },
+  {
+    "question": "What happens if our oxygen demand suddenly increases?",
+    "answer": "HealthPort monitors your facility's oxygen needs and works with your team to plan for changes in demand. Our goal is to maintain a reliable supply and reduce the risk of oxygen interruptions, including during periods of increased demand."
+  },
+  {
+    "question": "Will HealthPort help us manage and maintain the oxygen equipment?",
+    "answer": "Yes. HealthPort provides ongoing technical support for the oxygen infrastructure deployed at your facility. We monitor system performance, support maintenance, and work with the facility's technical team to address issues that could affect oxygen availability."
+  },
+  {
+    "question": "What happens after HealthPort starts working with our facility?",
+    "answer": "HealthPort continues to work with the facility beyond installation or supply. We provide ongoing monitoring, technical support, maintenance, training, and oxygen management to help keep the system reliable and responsive to the facility's needs."
+  },
+  {
+    "question": "Can HealthPort support us during emergencies or patient transfers?",
+    "answer": "Yes. HealthPort can support emergency oxygen needs and, where applicable, provide smaller portable oxygen cylinders for ambulance and patient-transfer systems. This helps maintain oxygen support while a patient is being transported between locations."
+  },
+  {
+    "question": "Can HealthPort train both clinical and technical staff?",
+    "answer": "Yes. HealthPort provides training tailored to different teams. Clinical staff receive training on safe and appropriate oxygen therapy, while technical staff can receive training related to oxygen equipment, systems, and maintenance."
+  }
+]

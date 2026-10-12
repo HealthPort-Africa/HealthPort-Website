@@ -84,16 +84,16 @@ export function IntelFlow() {
   const insight = insightPool[tick % insightPool.length];
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <div
-        className="flex items-stretch w-full"
+        className="flex flex-col lg:flex-row items-stretch w-full min-w-0"
         style={{ gap: "clamp(4px, 0.6vw, 10px)" }}
         role="img"
         aria-label="OxyIntel continuously processes raw operational data (cylinders, flow, SpO₂) into actionable insights: refill, demand, triage."
       >
         {/* LEFT — raw data streams (Ink text on Parchment chips).
             flex-1 so the column grows to fill the container width. */}
-        <div className="flex-1 flex flex-col gap-3 min-w-0">
+        <div className="grid grid-cols-3 lg:flex lg:flex-1 lg:flex-col gap-2 lg:gap-3 min-w-0">
           {rawStreams.map((s) => (
             <RawTile
               key={s.key}
@@ -107,6 +107,7 @@ export function IntelFlow() {
 
         {/* FEED IN — 3 curved arrows converging from each left tile
             onto the brain, with dots travelling along each curve. */}
+        <MobileFlowArrow />
         <FeedFan direction="in" />
 
         {/* CENTER — brain silhouette on white (no container) */}
@@ -114,12 +115,13 @@ export function IntelFlow() {
 
         {/* FEED OUT — one straight line from the brain to the single
             InsightPanel on the right, arrowhead at the tile end. */}
+        <MobileFlowArrow />
         <FeedFan direction="out" />
 
         {/* RIGHT — one InsightPanel showing the LATEST specific insight
             OxyIntel has produced + a running count of insights this
             shift. Centered vertically so it aligns with the brain. */}
-        <div className="flex-1 flex flex-col justify-center min-w-0">
+        <div className="lg:flex-1 flex flex-col justify-center min-w-0">
           <InsightPanel
             count={insightCount}
             category={insight.category}
@@ -128,6 +130,14 @@ export function IntelFlow() {
         </div>
       </div>
     </div>
+  );
+}
+
+function MobileFlowArrow() {
+  return (
+    <svg className="lg:hidden self-center my-2" width="16" height="28" viewBox="0 0 16 28" fill="none" aria-hidden="true">
+      <path d="M8 1v24m-5-5 5 5 5-5" stroke="var(--color-violet)" strokeWidth="1.5" />
+    </svg>
   );
 }
 
@@ -148,7 +158,7 @@ function RawTile({
 }) {
   return (
     <div
-      className="flex items-center w-full"
+      className="intel-raw-tile flex flex-col sm:flex-row items-center w-full min-w-0"
       style={{
         gap: "14px",
         padding: "14px 20px",
@@ -162,7 +172,7 @@ function RawTile({
     >
       <span
         aria-hidden
-        className="inline-flex items-center justify-center"
+        className="hidden sm:inline-flex items-center justify-center"
         style={{
           width: "26px",
           height: "26px",
@@ -337,7 +347,7 @@ function FeedFan({ direction }: { direction: "in" | "out" }) {
 
   return (
     <div
-      className="relative flex-shrink-0"
+      className="hidden lg:block relative flex-shrink-0"
       style={{ width: WIDTH, height: HEIGHT }}
       aria-hidden
     >

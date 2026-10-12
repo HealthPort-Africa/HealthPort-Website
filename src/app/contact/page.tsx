@@ -128,7 +128,7 @@ export default function ContactPage() {
         </div>
 
         {/* Two-column form + channels */}
-        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-6 md:gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-6 md:gap-8 items-start">
           <InquiryForm />
           <ContactChannels />
         </div>

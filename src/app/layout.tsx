@@ -8,10 +8,7 @@ import { SectionReveal } from "@/components/motion/SectionReveal";
 import { StatReveal } from "@/components/motion/StatReveal";
 import { ImageReveal } from "@/components/motion/ImageReveal";
 import { Parallax } from "@/components/motion/Parallax";
-// SmoothScroll (Lenis) removed — it wraps the body in a transform which
-// breaks `position: sticky` and hurts first-paint time. Native scroll is
-// used site-wide instead; `scroll-behavior: smooth` on <html> in
-// globals.css gives us smooth anchor scrolls without the perf cost.
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -168,6 +165,7 @@ export default function RootLayout({
           {/* <OxygenThread /> — hidden per current direction. Re-enable to restore the signature left-rail thread. */}
           {children}
         </main>
+        <SmoothScroll />
         <SectionReveal />
         <StatReveal />
         <ImageReveal />

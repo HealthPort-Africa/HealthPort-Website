@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * SectionReveal — mounted once in the root layout. Watches every
@@ -16,6 +17,7 @@ import { useEffect } from "react";
  * "Sections fade-up 12px on first reveal (250ms ease-out, once: true)".
  */
 export function SectionReveal() {
+  const pathname = usePathname();
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
@@ -33,9 +35,9 @@ export function SectionReveal() {
       const rect = el.getBoundingClientRect();
       if (rect.top > winH * 0.85) {
         el.style.opacity = "0";
-        el.style.transform = "translateY(12px)";
+        el.style.transform = "translateY(20px)";
         el.style.transition =
-          "opacity 400ms cubic-bezier(0.22,1,0.36,1), transform 400ms cubic-bezier(0.22,1,0.36,1)";
+          "opacity 700ms cubic-bezier(0.22,1,0.36,1), transform 700ms cubic-bezier(0.22,1,0.36,1)";
         el.style.willChange = "opacity, transform";
         belowFold.push(el);
       }
@@ -52,7 +54,7 @@ export function SectionReveal() {
           el.style.transform = "translateY(0)";
           window.setTimeout(() => {
             el.style.willChange = "";
-          }, 500);
+          }, 750);
           io.unobserve(el);
         });
       },
@@ -61,8 +63,11 @@ export function SectionReveal() {
 
     belowFold.forEach((el) => io.observe(el));
 
-    return () => io.disconnect();
-  }, []);
+    return () => {
+      io.disconnect();
+      belowFold.forEach(el => { el.style.opacity = ""; el.style.transform = ""; el.style.transition = ""; el.style.willChange = ""; });
+    };
+  }, [pathname]);
 
   return null;
 }

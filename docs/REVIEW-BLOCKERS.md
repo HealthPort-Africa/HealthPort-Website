@@ -47,11 +47,8 @@ with what's in the repo today.
 
 | # | Item | Notes |
 |---|---|---|
-| 14 | **Careers inbox** | Phase 1 sends CVs to `info@healthportafrica.com`. Confirm that mailbox exists and is monitored. |
-| 15 | **Zoho Mail routing (Phase 2)** | Need full list of hiring stakeholders for aliases/forwarding (spec names Toyeeb — who else?). Also confirm who owns the Zoho admin and will set this up. |
-| 16 | **Zoho Recruit / Zoho Form (Phase 3)** | Confirm the product choice (Recruit vs. Form) and whether we get an admin account when it's time to embed. |
+| 14 | **Careers inbox** | Phase 1 sends CVs to `careers@healthportafrica.com`. Confirm that mailbox exists and is monitored. |
 | 17 | **Standards section — hard-remove or hide?** | Spec says remove until compliance guidelines are formalized. Preference: keep the code behind a feature flag so it can be flipped back on, vs. delete and rebuild later? Also — rough ETA on the formalized guidelines? |
-| 18 | **Hero video re-cut** | Current hero autoplays a testimonial loop. Copy around it is changing to "HealthPort Africa" / sub-Saharan framing. Does the video need a re-edit, or is the existing cut fine? |
 
 ## 5. Sanity checks on our end (no action needed from you)
 
@@ -76,5 +73,5 @@ Still gated on the items above:
 - Assets #1–#6.
 - Real FAQ answers (currently draft), telemetry monitoring points, manifold-vs-cylinder failure copy.
 - Metric approval, Dr. Olutekunbi spelling, "HealthPort Africa" full-rename decision.
-- Careers inbox confirmation, Zoho scoping (Phase 2/3 out of scope for this build).
-- Hero video re-cut decision.
+- Careers inbox confirmation.
+- Hero video re-cut decision (resolved 2026-10-10: replaced with hero photo ticker).

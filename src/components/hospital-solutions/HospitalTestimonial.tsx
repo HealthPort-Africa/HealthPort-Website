@@ -3,11 +3,9 @@
  *
  * Minimal header ("TESTIMONIALS" eyebrow) sitting above the shared
  * TestimonialVideo (poster + tap-to-play with sound, same behaviour
- * as the home version). The video wrapper picks up the exact
- * scroll-scale animation the home HeroVideo uses — the outer
- * container scales 0.85 → 1.30 as the section enters the viewport,
- * so the frame grows into presence as the reader arrives. Respects
- * prefers-reduced-motion.
+ * as the home version). The video wrapper scales 0.85 → 1.30 as the
+ * section enters the viewport, so the frame grows into presence as
+ * the reader arrives. Respects prefers-reduced-motion.
  */
 "use client";
 
@@ -17,8 +15,7 @@ import { TestimonialVideo } from "@/components/home/TestimonialVideo";
 export function HospitalTestimonial() {
   const scaleRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-driven scale on the outer wrapper (0.85 → 1.30) — copied
-  // exactly from HeroVideo so the two moments feel unified.
+  // Scroll-driven scale on the outer wrapper (0.85 → 1.30).
   useEffect(() => {
     const el = scaleRef.current;
     if (!el) return;
