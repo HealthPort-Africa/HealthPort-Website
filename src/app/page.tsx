@@ -7,6 +7,8 @@ import { Journey } from "@/components/home/Journey";
 import { BeforeAfter } from "@/components/home/BeforeAfter";
 import { Testimonial } from "@/components/home/Testimonial";
 
+import { FAQ } from "@/components/oaas/FAQ";
+
 export default function Home() {
   return (
     <>
@@ -18,6 +20,7 @@ export default function Home() {
       <Journey />
       <BeforeAfter />
       <Testimonial />
+      <FAQ />
     </>
   );
 }

@@ -37,6 +37,21 @@ export function Nav() {
     };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const closeOnDesktop = () => { if (desktop.matches) setMobileOpen(false); };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { setMobileOpen(false); setOpen(null); }
+    };
+    desktop.addEventListener("change", closeOnDesktop);
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      desktop.removeEventListener("change", closeOnDesktop);
+      window.removeEventListener("keydown", closeOnEscape);
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, []);
+
   const openMenu = (key: MenuKey) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpen(key);
@@ -59,11 +74,11 @@ export function Nav() {
       }}
     >
       <div
-        className={`container-page flex items-center justify-between transition-[padding] duration-300 ${
+        className={`container-page flex items-center justify-between gap-6 transition-[padding] duration-300 ${
           scrolled ? "py-3" : "py-5"
         }`}
       >
-        <Link href="/" aria-label="HealthPort home" className="flex items-center">
+        <Link href="/" aria-label="HealthPort home" className="flex shrink-0 items-center">
           <Image
             src="/brand/logo-horizontal-primary.svg"
             alt="HealthPort"
@@ -76,7 +91,7 @@ export function Nav() {
 
         {/* Desktop nav */}
         <nav
-          className="hidden md:flex items-center gap-9 text-[15px]"
+          className="hidden lg:flex items-center gap-6 xl:gap-9 whitespace-nowrap text-[15px]"
           onMouseLeave={scheduleClose}
         >
           <NavDropdown
@@ -99,7 +114,7 @@ export function Nav() {
           </Link>
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block shrink-0 whitespace-nowrap">
           <Link href="/contact" className="btn-primary text-[15px] px-5 py-2.5">
             Book an assessment
           </Link>
@@ -108,9 +123,10 @@ export function Nav() {
         {/* Mobile burger */}
         <button
           type="button"
-          className="md:hidden inline-flex items-center justify-center p-2 -mr-2 text-[var(--color-fg)]"
+          className="lg:hidden inline-flex items-center justify-center p-2 -mr-2 text-[var(--color-fg)]"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
           onClick={() => setMobileOpen((v) => !v)}
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -136,7 +152,7 @@ export function Nav() {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div
-          className="md:hidden"
+          id="mobile-navigation" className="lg:hidden max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain"
           style={{ borderTop: "1px solid var(--color-keyline)" }}
         >
           <div className="container-page py-8 flex flex-col gap-6">
@@ -199,6 +215,7 @@ function NavDropdown({
         aria-expanded={open}
         aria-haspopup="true"
         onFocus={onEnter}
+        onClick={onEnter}
       >
         {label}
         <svg

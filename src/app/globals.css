@@ -37,16 +37,6 @@
     scroll-behavior: smooth;
   }
 
-  /* Below-fold performance — skip layout + paint for sections that
-     aren't in the viewport yet. `contain-intrinsic-size: auto 800px`
-     reserves a plausible height so the scrollbar stays stable while
-     the browser fills in real content on scroll. The first section
-     (hero) is left alone so it renders instantly on load. */
-  main > section:not(:first-child) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 800px;
-  }
-
   body {
     background: var(--color-bg);
     color: var(--color-fg);
@@ -183,39 +173,6 @@
   }
   .footer-airup:hover .airup-float {
     animation-play-state: paused;
-  }
-
-  /* Leadership ticker — continuous horizontal marquee of team
-     polaroids. Same grammar the home TrustBar uses for partner
-     logos: track is `width: max-content`, slides via translateX
-     from 0 → -50% (doubled item list in JSX makes the loop
-     seamless), pauses on hover so the reader can inspect a card.
-     overflow: hidden — this is a pure infinite loop, no manual
-     scroll (manual scroll hits the end of the doubled list and
-     breaks the loop illusion). */
-  .team-ticker {
-    width: 100%;
-    overflow: hidden;
-  }
-  .team-ticker__track {
-    display: flex;
-    align-items: center;
-    gap: clamp(2rem, 3vw, 3.5rem);
-    padding-inline: clamp(2rem, 3vw, 4rem);
-    padding-block: 3rem;
-    width: max-content;
-    animation: team-ticker 60s linear infinite;
-    list-style: none;
-    margin: 0;
-  }
-  .team-ticker:hover .team-ticker__track {
-    animation-play-state: paused;
-  }
-  .team-ticker__item {
-    flex-shrink: 0;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .team-ticker__track { animation: none; }
   }
 
   /* AirUp mascot — soft, slow float on Y so the character reads as
@@ -694,12 +651,7 @@
   50%      { transform: translateY(-8px); }
 }
 
-/* Leadership ticker — continuous horizontal marquee for the team
-   polaroids. See .team-ticker__track above. */
-@keyframes team-ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+
 
 /* For Partners §3 Ways-to-build — see the .ways-* classes above. */
 @keyframes ways-spin {
@@ -951,6 +903,37 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Hero photo ticker — CLAUDE.md motion rule #7. Slow horizontal strip of
+   real facility photography pinned to the bottom of the Home hero. The
+   track is the image set duplicated so the keyframe loop (0 → -50%) is
+   seamless. `mask-image` fades the left/right edges into the hero so the
+   strip doesn't hard-clip at the viewport edges. The reduced-motion
+   backstop below zeros out the keyframe duration. */
+.hero-ticker {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+.hero-ticker-track {
+  animation: hero-ticker-scroll 60s linear infinite;
+  will-change: transform;
+}
+@keyframes hero-ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
 /* Reduced motion — the six allowed animations are wrapped in
    gsap.matchMedia elsewhere; this backstops CSS transitions too. */
 @media (prefers-reduced-motion: reduce) {
@@ -960,4 +943,34 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Keep the cropped cylinder shoulder flush with the chapter boundary.
+   On mobile the text follows the image, so keep breathing room there. */
+@media (max-width: 1023px) {
+  .oxygen-gap-section { padding-bottom: 2rem; }
+}
+@media (min-width: 1024px) {
+  .oxygen-gap-tank { align-self: end; }
+}
+
+.healthport-faq { scroll-margin-top: 6rem; }
+.healthport-faq-neutral-row {
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-parchment) 55%, white);
+  transition: background-color 220ms ease;
+}
+.healthport-faq-neutral-row:hover,
+.healthport-faq-neutral-row[open] {
+  background: #efefeb !important;
+}
+.healthport-faq-neutral-row > summary:focus-visible {
+  outline: 2px solid var(--color-teal);
+  outline-offset: 3px;
+  border-radius: 16px;
+}
+
+/* Stack the OxyIntel data flow until there is room for all five columns. */
+@media (max-width: 1023px) {
+  .intel-raw-tile { padding: 12px 8px !important; height: auto !important; min-height: 68px; gap: 8px !important; }
 }

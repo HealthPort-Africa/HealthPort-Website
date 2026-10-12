@@ -203,7 +203,7 @@ function ChannelRow({
         </p>
         <a
           href={href}
-          className="link-quiet truncate"
+          className="link-quiet [overflow-wrap:anywhere]"
           style={{
             fontFamily: "var(--font-body)",
             fontSize: "14px",

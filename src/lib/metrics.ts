@@ -15,11 +15,15 @@ type MetricsFile = {
   supplyReliability: Metric;
 };
 
-const { $comment: _c, ...typed } = raw as unknown as MetricsFile & {
-  $comment?: string;
-};
+const supplied = raw[0];
+const numberFrom = (value: string) => Number(value.replace(/,/g, "").match(/[\d.]+/)?.[0]);
 
-export const metrics: MetricsFile = typed;
+export const metrics: MetricsFile = {
+  hospitalsServed: { value: numberFrom(supplied.Hospitals), suffix: "+", label: "Hospitals served" },
+  litresDelivered: { value: numberFrom(supplied.Liters), suffix: "M+", decimals: 1, label: "Litres of medical oxygen delivered" },
+  patientsSupported: { value: numberFrom(supplied.Patients), suffix: "+", label: "Patients supported" },
+  supplyReliability: { value: numberFrom(supplied.Reliability), suffix: "%", decimals: 1, label: "Supply reliability" },
+};
 
 export const metricsOrdered: Metric[] = [
   metrics.hospitalsServed,

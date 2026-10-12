@@ -285,10 +285,10 @@ export function InquiryForm() {
         className="grid gap-2.5 mb-8"
         style={{
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(clamp(180px, 17vw, 240px), 1fr))",
+            "repeat(auto-fit, minmax(min(100%, 15rem), 1fr))",
           border: 0,
           padding: 0,
-          margin: 0,
+          margin: "0 0 2rem",
         }}
       >
         <legend className="sr-only">Inquiry type</legend>
@@ -380,7 +380,7 @@ export function InquiryForm() {
                   <Icon />
                 </span>
 
-                <div className="flex flex-col min-w-0">
+                <div className="flex flex-col min-w-0 [overflow-wrap:anywhere]">
                   <span
                     style={{
                       fontFamily: "var(--font-display)",
@@ -567,7 +567,7 @@ export function InquiryForm() {
           border: 1px solid var(--color-keyline);
           border-radius: 10px;
           font-family: var(--font-body);
-          font-size: 14.5px;
+          font-size: 16px;
           line-height: 1.5;
           transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1),
             box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -638,7 +638,7 @@ function CareersPanel() {
 
   return (
     <div
-      className="flex flex-col"
+      className="flex flex-col [overflow-wrap:anywhere]"
       style={{
         background: "var(--color-parchment)",
         border: "1px solid var(--color-keyline)",
