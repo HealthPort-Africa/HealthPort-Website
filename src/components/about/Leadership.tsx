@@ -3,7 +3,7 @@
  *
  * Four client-supplied portraits in a static responsive grid.
  *
- * Photos: client-supplied team portraits. Roles are provisional preview copy.
+ * Photos: client-supplied team portraits. Names and roles confirmed 2026-10-14.
  */
 import Image from "next/image";
 
@@ -14,31 +14,30 @@ type TeamMember = {
   image: string;
 };
 
-// Names are taken from the supplied photo filenames.
-// Role titles are provisional, requested for the design preview; replace when confirmed.
+// Names and roles confirmed by Aisha in the stakeholder review.
 const team: TeamMember[] = [
   {
     key: "toyeeb",
-    name: "Toyeeb",
-    role: "Engineering Lead",
+    name: "Toyeeb Kazeem",
+    role: "Data Engineer",
     image: "/photos/team/toyeeb.jpg",
   },
   {
     key: "francis",
-    name: "Francis",
-    role: "Operations Lead",
+    name: "Francis Oyetibo",
+    role: "Head of Operations",
     image: "/photos/team/francis.jpeg",
   },
   {
     key: "aisha",
-    name: "Aisha",
-    role: "Partnerships Lead",
+    name: "Aisha Adeniji",
+    role: "Founder/CEO",
     image: "/photos/team/aisha.jpeg",
   },
   {
     key: "mariam",
-    name: "Mariam",
-    role: "Clinical Programmes Lead",
+    name: "Mariam Abdul Salam",
+    role: "Business Development",
     image: "/photos/team/mariam.png",
   },
 ];
@@ -92,7 +91,7 @@ export function Leadership() {
       </div>
 
       <div className="container-page">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 list-none">
+        <ul className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 list-none max-w-xl lg:max-w-4xl">
           {orderedTeam.map(member => (
             <li key={member.key} className="min-w-0">
               <PolaroidCard member={member} />
@@ -125,7 +124,7 @@ function PolaroidCard({ member }: { member: TeamMember }) {
       <div
         className="relative w-full overflow-hidden"
         style={{
-          aspectRatio: "3 / 4",
+          aspectRatio: "4 / 5",
           background: "var(--color-ink)",
         }}
       >
@@ -133,13 +132,13 @@ function PolaroidCard({ member }: { member: TeamMember }) {
           src={member.image}
           alt={`${member.name}, ${member.role}`}
           fill
-          sizes="(min-width: 1280px) 228px, (min-width: 1024px) 22vw, (min-width: 640px) 44vw, 90vw"
+          sizes="(min-width: 1024px) 206px, (min-width: 768px) 276px, 44vw"
           style={{ objectFit: "cover", objectPosition: "50% 30%" }}
         />
       </div>
 
       {/* Caption */}
-      <div className="flex flex-col px-5 py-5">
+      <div className="flex flex-col px-3 py-4 md:px-4 [overflow-wrap:anywhere]">
         <p
           style={{
             fontFamily: "var(--font-display)",

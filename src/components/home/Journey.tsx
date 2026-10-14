@@ -12,7 +12,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 type Step = {
   n: string;
@@ -113,7 +113,7 @@ export function Journey() {
       {/* Intro — centered, matches the section-header grammar the
           cross-page audit picked up on. Parallax on the whole block
           so children move as a unit and never overlap. */}
-      <div className="container-page mb-14 md:mb-20">
+      <div className="container-page mb-10 md:mb-20">
         <div
           className="max-w-3xl mx-auto text-center flex flex-col items-center"
           data-parallax="-0.1"
@@ -136,17 +136,16 @@ export function Journey() {
 
       {/* Two-column region — LEFT aligns to container edge, RIGHT bleeds to viewport edge */}
       <div
-        className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start"
+        className="home-journey-grid grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start pr-6 md:pr-0"
         style={{
           // Left padding matches the container's left edge on wide screens
           // (max(pad, half of the extra beyond container-max) + pad).
           paddingLeft:
             "max(1.5rem, calc((100vw - var(--container-max)) / 2 + 1.5rem))",
-          paddingRight: "0",
         }}
       >
         {/* LEFT — stacked step list */}
-        <ol className="list-none flex flex-col">
+        <ol className="list-none flex flex-col gap-8 md:gap-0">
           {steps.map((s, i) => {
             const isActive = i === active;
             return (
@@ -155,16 +154,14 @@ export function Journey() {
                 ref={(el) => {
                   stepRefs.current[i] = el;
                 }}
-                className="relative"
+                className="home-journey-step relative min-h-0 md:min-h-[38vh] md:py-[2vh] opacity-100 md:opacity-[var(--journey-step-opacity)]"
                 style={{
-                  minHeight: "38vh",
-                  paddingBlock: "2vh",
                   transition: "opacity 400ms ease",
-                  opacity: isActive ? 1 : 0.32,
-                }}
+                  "--journey-step-opacity": isActive ? 1 : 0.32,
+                } as CSSProperties}
               >
                 <p
-                  className="eyebrow mb-4"
+                  className="eyebrow mb-2 md:mb-4"
                   style={{
                     color: isActive
                       ? "var(--color-teal)"
@@ -174,7 +171,7 @@ export function Journey() {
                   Step {s.n} · {s.phase}
                 </p>
                 <h3
-                  className="mb-4"
+                  className="mb-2 md:mb-4"
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "var(--text-h3)",

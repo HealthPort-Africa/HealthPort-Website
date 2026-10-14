@@ -1,8 +1,8 @@
 import Image from "next/image";
 
 /**
- * Hero photo ticker — slow horizontal strip of real facility photography
- * pinned to the bottom of the Home hero (CLAUDE.md motion rule #7).
+ * Home photo ticker — slow horizontal strip of real facility photography
+ * below the Impact chapter (CLAUDE.md motion rule #7, review 2026-10-14).
  *
  * The track is the image set rendered twice so the CSS keyframe loop
  * (0 → -50%) is seamless. Keep the two halves identical and in order.
