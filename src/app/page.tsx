@@ -1,4 +1,5 @@
 import { Hero } from "@/components/home/Hero";
+import { HeroTicker } from "@/components/home/HeroTicker";
 import { TrustBar } from "@/components/home/TrustBar";
 import { OxygenGap } from "@/components/home/OxygenGap";
 import { ImpactChapter } from "@/components/home/ImpactChapter";
@@ -13,10 +14,13 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <TrustBar />
+      <WhatWeDo />
       <OxygenGap />
       <ImpactChapter />
-      <WhatWeDo />
+      <section aria-label="HealthPort facility photography" className="w-full overflow-hidden">
+        <HeroTicker />
+      </section>
+      <TrustBar />
       <Journey />
       <BeforeAfter />
       <Testimonial />

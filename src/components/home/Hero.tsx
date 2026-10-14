@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { HeroTicker } from "@/components/home/HeroTicker";
 import { HeroWash } from "@/components/shared/HeroWash";
 
 export function Hero() {
@@ -7,7 +6,7 @@ export function Hero() {
     <section
       className="relative w-full overflow-hidden isolate flex flex-col"
       style={{
-        minHeight: "calc(100svh - 4.625rem)",
+        minHeight: "calc(70svh - 4.625rem)",
         paddingTop: "clamp(2rem, 4vw, 4rem)",
       }}
       aria-label="Never worry about oxygen again"
@@ -49,10 +48,6 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Hero photo ticker — pinned to the bottom of the hero section,
-          spans the full viewport width (sits outside the centered flex
-          column so it isn't shrunk to the container's width). */}
-      <HeroTicker />
     </section>
   );
 }

@@ -13,4 +13,4 @@ export const SHOW_STANDARDS = false;
 // Canva view URL to expose the "View impact report" button on the
 // For Partners page. `null` hides the button entirely. The button
 // opens in a new tab (target="_blank").
-export const IMPACT_REPORT_URL: string | null = null;
+export const IMPACT_REPORT_URL: string | null = "https://canva.link/8yphccs8e5f2uxv";

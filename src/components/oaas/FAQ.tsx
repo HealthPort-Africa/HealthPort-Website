@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import faqs from "../../../data/faq.json";
 
 /** Shared FAQ: approved client copy, native keyboard-accessible disclosures. */
 export function FAQ() {
   const section = useRef<HTMLElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const listId = useId();
   useEffect(() => {
     if (!section.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const animations: Animation[] = [];
-    const rows = Array.from(section.current.querySelectorAll<HTMLElement>("details"));
+    const rows = Array.from(section.current.querySelectorAll<HTMLElement>("details:not([data-faq-revealed])"));
     const observer = new IntersectionObserver(entries => {
       const visible = entries.filter(entry => entry.isIntersecting);
       visible.forEach((entry, index) => {
@@ -17,12 +19,13 @@ export function FAQ() {
           [{ opacity: 0, transform: "translateY(18px)" }, { opacity: 1, transform: "translateY(0)" }],
           { duration: 650, delay: index * 65, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "backwards" }
         ));
+        (entry.target as HTMLElement).dataset.faqRevealed = "true";
         observer.unobserve(entry.target);
       });
     }, { rootMargin: "0px 0px -5% 0px" });
     rows.forEach(row => observer.observe(row));
     return () => { observer.disconnect(); animations.forEach(animation => animation.cancel()); };
-  }, []);
+  }, [expanded]);
   return (
     <section ref={section} id="faq" className="healthport-faq relative isolate overflow-hidden w-full" aria-label="Frequently asked questions" style={{ paddingBlock: "var(--spacing-section)" }}>
       <div className="container-page relative">
@@ -33,8 +36,8 @@ export function FAQ() {
           lineHeight: 1.08,
           letterSpacing: "-0.035em",
         }}>Frequently asked<br className="sm:hidden" /> questions.</h2>
-        <div className="relative mx-auto max-w-5xl flex flex-col gap-3">
-          {faqs.map(faq => (
+        <div id={listId} className="relative mx-auto max-w-5xl flex flex-col gap-3">
+          {faqs.slice(0, expanded ? faqs.length : 5).map(faq => (
             <details key={faq.question} name="healthport-faq" className="faq-item healthport-faq-neutral-row" style={{ borderRadius: "16px", background: "color-mix(in srgb, var(--color-parchment) 55%, white)" }}>
               <summary className="faq-summary flex items-center justify-between gap-6 cursor-pointer list-none" style={{
                 padding: "clamp(1.25rem, 2.2vw, 2rem) clamp(1.25rem, 3vw, 3rem)",
@@ -55,6 +58,13 @@ export function FAQ() {
             </details>
           ))}
         </div>
+        {faqs.length > 5 && (
+          <div className="flex justify-center mt-8">
+            <button type="button" className="btn-secondary" aria-expanded={expanded} aria-controls={listId} onClick={() => setExpanded(value => !value)}>
+              {expanded ? "Show less" : "Show more"}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
