@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { caseStudies } from "@/data/case-studies";
 
 /**
  * Sitemap generated at build time. Route list is small enough to hand-write;
@@ -13,6 +14,7 @@ const routes = [
   { path: "/for-partners", priority: 0.8, changeFrequency: "monthly" as const },
   { path: "/about", priority: 0.6, changeFrequency: "yearly" as const },
   { path: "/contact", priority: 0.7, changeFrequency: "yearly" as const },
+  ...caseStudies.map(study => ({ path: `/case-studies/${study.slug}`, priority: 0.6, changeFrequency: "monthly" as const })),
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
