@@ -3,9 +3,7 @@
  *
  * Dark Ink chapter. Left-aligned editorial header (Tea Green
  * eyebrow + Tea Green h2 + muted sub), then a 2×2 grid holding
- * three bordered cards. The bottom-right cell is intentionally
- * empty so the faded shake-hands-line outline that bleeds from
- * that corner has room to breathe.
+ * three equal cards in one row, stacked vertically on mobile.
  *
  * Motion:
  *   - Header drifts via data-parallax
@@ -50,8 +48,8 @@ export function PartnershipShape() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
       .matches;
     if (reduced) {
-      setRevealed(true);
-      return;
+      const frame = window.requestAnimationFrame(() => setRevealed(true));
+      return () => window.cancelAnimationFrame(frame);
     }
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -142,9 +140,8 @@ export function PartnershipShape() {
           </p>
         </div>
 
-        {/* 2×2 grid — three cards; bottom-right slot intentionally
-            empty so the handshake bleed has room to speak. */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl">
+        {/* Equal-width cards share one row; mobile reads top to bottom. */}
+        <div className="flex flex-col md:flex-row gap-5 md:gap-6">
           {items.map((item, i) => (
             <PartnershipCard
               key={item.title}
@@ -172,12 +169,12 @@ function PartnershipCard({
 }) {
   return (
     <article
-      className="flex flex-col"
+      className="flex flex-col flex-1 min-w-0"
       style={{
         borderRadius: "clamp(18px, 1.8vw, 22px)",
         border:
           "1px solid color-mix(in srgb, var(--color-teagreen) 22%, transparent)",
-        padding: "clamp(2rem, 2.6vw, 2.5rem)",
+        padding: "clamp(1.5rem, 2.6vw, 2.5rem)",
         opacity: revealed ? 1 : 0,
         transform: revealed ? "translateY(0)" : "translateY(14px)",
         transition: `opacity 580ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms, transform 580ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,

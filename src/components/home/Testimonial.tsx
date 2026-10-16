@@ -3,7 +3,7 @@
  *
  * Editorial vertical stack: pull-quote from the video serves as the section
  * heading (no separate H2), attribution beneath, then the full-container-width
- * video (16:9). Click the play pill to hear Dr. Niki tell the story with sound.
+ * video (16:9). Click the play pill to hear Dr. Olutekunbi tell the story with sound.
  */
 import { TestimonialVideo } from "@/components/home/TestimonialVideo";
 
@@ -50,7 +50,6 @@ export function Testimonial() {
               className="mt-8 md:mt-10 flex flex-col items-center gap-1"
               style={{ color: "var(--color-muted)" }}
             >
-              {/* FACT NEEDED: confirm speaker name spelling (whisper heard "Ola Niki") */}
               <span
                 style={{
                   fontFamily: "var(--font-display)",
@@ -59,7 +58,7 @@ export function Testimonial() {
                   color: "var(--color-fg)",
                 }}
               >
-                Dr. Ola Niki
+                Dr. Olanike Olutekunbi
               </span>
               <span className="eyebrow" style={{ color: "var(--color-muted)" }}>
                 Medical Director, Massey Street Children&rsquo;s Hospital &middot; Lagos, Nigeria

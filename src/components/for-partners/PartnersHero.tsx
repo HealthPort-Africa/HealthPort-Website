@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeroWash } from "@/components/shared/HeroWash";
+import { IMPACT_REPORT_URL } from "@/lib/flags";
 
 /**
  * For Partners §1 — the page hero.
@@ -67,8 +68,7 @@ export function PartnersHero() {
             </strong>
           </p>
 
-          {/* CTAs — primary partnership conversation + secondary link
-              to the impact story lower on the page. */}
+          {/* Partnership conversation and direct access to the impact report. */}
           <div className="flex flex-wrap gap-3">
             <Link href="/contact" className="btn-primary">
               Start a partnership conversation
@@ -88,12 +88,17 @@ export function PartnersHero() {
                 />
               </svg>
             </Link>
-            <Link
-              href="#transparency"
-              className="btn-secondary"
-            >
-              See our impact
-            </Link>
+            {IMPACT_REPORT_URL && (
+              <a
+                href={IMPACT_REPORT_URL}
+                className="btn-secondary"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View our impact report (opens in a new tab)"
+              >
+                View our impact report
+              </a>
+            )}
           </div>
         </div>
       </div>

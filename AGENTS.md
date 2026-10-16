@@ -150,7 +150,7 @@ All motion is built with GSAP + ScrollTrigger. Allowed, and only these:
 4. Journey steps reveal in sequence as the thread reaches them
 5. Before/after comparison toggle on Hospital Solutions
 6. Nav compresses on scroll
-7. **Hero photo ticker** — a slow horizontal strip of real facility photography pinned to the bottom of the Home hero. Pure CSS keyframe translate (no GSAP), ≥60s per loop, seamless (image set duplicated), edge-faded via `mask-image`. Stakeholder-approved replacement for the hero video re-cut. This is the ONE marquee on the site; do not add another.
+7. **Home photo ticker** — a slow horizontal strip of real facility photography below the Impact chapter, followed by partner logos. The 2026-10-14 stakeholder review moves “What we do” directly below the hero copy and moves this strip out of the hero. Pure CSS keyframe translate (no GSAP), ≥60s per loop, seamless (image set duplicated), edge-faded via `mask-image`. Stakeholder-approved replacement for the hero video re-cut. This is the ONE marquee on the site; do not add another.
 
 ScrollTrigger discipline: `pin` is banned. Horizontal scroll sections are banned.
 `scrub` outside the thread is banned. Parallax is banned. If a proposed effect is
