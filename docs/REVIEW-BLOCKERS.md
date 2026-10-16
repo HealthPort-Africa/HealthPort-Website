@@ -10,7 +10,7 @@ with what's in the repo today.
 - Implemented locally: Home section swap; five initial FAQs with Show more/Show less on Home and OaaS; compact static Leadership cards and confirmed full names/roles; Dr. Olanike Olutekunbi attribution; three equal partnership cards in one desktop/tablet row, stacked on mobile.
 - Impact Report linked to https://canva.link/8yphccs8e5f2uxv. Confirmed report opens in Canva Viewing mode without sign-in.
 - Local contact handler tested with `.env.local` credentials and an isolated test-recipient override. HTTP 200, `ok: true`, routed to the user-authorized test inbox. Provider acceptance confirmed; inbox receipt remains to be confirmed. `.env.local` was not changed.
-- Case-study copy remains pending: user does not yet have the approved Drive file.
+- Case-study copy received 2026-10-15 as `Five Cases.pdf`. Five internal story pages replace the dummy cards. Content and matching real photography are implemented locally for review.
 
 ## Resolved since first pass (Sage, 2026-09-28)
 
